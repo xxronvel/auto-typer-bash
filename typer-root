@@ -1,0 +1,18 @@
+#!/bin/bash
+
+speed=0.1
+
+IFS=$'\n'
+for command in $(cat $1)
+do
+	echo -ne '\033[1;31m'$(id -un)'@'$(hostname)'\033[0m:\033[1;34m'$(pwd | sed "s|$HOME|~|g")'\033[0m'$(if [ $(id -ur) -eq 0 ]; then echo '#'; else echo '$'; fi)' '
+	read -d ' ' key
+	echo -ne '\b'
+	for l in $(echo $command | awk -F '' '{for (i=1; i<=NF; i++) print $i}')
+	do
+		echo -n $l
+		sleep $speed
+	done
+	read
+	eval $command
+done
